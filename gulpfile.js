@@ -9,31 +9,45 @@ const css = require('./tasks/css');
 const js = require('./tasks/js');
 const images = require('./tasks/images');
 const fonts = require('./tasks/fonts');
+const include = require('gulp-include');
+
+function pages() {
+	return src('./src/pages/*.html')
+		.pipe(
+			include({
+				includePaths: 'src/components',
+			}),
+		)
+		.pipe(dest('src'))
+		.pipe(browserSync.stream());
+}
 
 const server = () => {
-  browserSync.init({
-    server: {
-      baseDir: './dist',
-    },
-  });
+	browserSync.init({
+		server: {
+			baseDir: './dist',
+		},
+	});
 };
 
 const watcher = () => {
-  watch('./src/**/*.html', html).on('all', browserSync.reload);
-  watch('./src/css/**/*.css', css).on('all', browserSync.reload);
-  watch('./src/scss/*.{scss, sass}', scss).on('all', browserSync.reload);
-  watch('./src/js/**/*.js', js).on('all', browserSync.reload);
-  watch('./src/images', images).on('all', browserSync.reload);
-  watch('./src/fonts', fonts).on('all', browserSync.reload);
+	watch('src/**/*.html', html).on('all', browserSync.reload);
+	watch(['./src/components/*', 'src/pages/*'], pages).on('all', browserSync.reload);
+	watch('src/css/**/*.css', css).on('all', browserSync.reload);
+	watch('src/scss/*.{scss, sass}', scss).on('all', browserSync.reload);
+	watch('src/js/**/*.js', js).on('all', browserSync.reload);
+	watch('src/images', images).on('all', browserSync.reload);
+	watch('src/fonts', fonts).on('all', browserSync.reload);
 };
 
 const build = series(clear, parallel(html, css, scss, js, images));
 
-const dev = series(build, parallel(watcher, server));
+const dev = series(build, pages, parallel(pages, watcher, server));
 
 exports.clear = clear;
 exports.images = images;
 exports.html = html;
+exports.pages = pages;
 exports.css = css;
 exports.scss = scss;
 exports.fonts = fonts;

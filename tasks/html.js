@@ -8,7 +8,7 @@ const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 
 const html = () => {
-	return src('./src/index.html')
+	return src('src/index.html')
 		.pipe(size({ title: 'html before compressing' }))
 		.pipe(plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }))
 		.pipe(webpHTML())
