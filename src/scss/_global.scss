@@ -4,6 +4,8 @@ body {
 	scroll-behavior: smooth;
 	overflow-x: hidden;
 	height: 100%;
+	font-family: $main-font-family;
+	font-weight: 400;
 }
 .wrapper {
 	min-height: 100%;
