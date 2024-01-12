@@ -9,18 +9,7 @@ const css = require('./tasks/css');
 const js = require('./tasks/js');
 const images = require('./tasks/images');
 const fonts = require('./tasks/fonts');
-const include = require('gulp-include');
-
-function pages() {
-	return src('./src/pages/*.html')
-		.pipe(
-			include({
-				includePaths: 'src/components',
-			}),
-		)
-		.pipe(dest('src'))
-		.pipe(browserSync.stream());
-}
+const pages = require('./tasks/fileinclude');
 
 const server = () => {
 	browserSync.init({
